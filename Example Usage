@@ -1,0 +1,10 @@
+<button onclick="connectWallet()">Connect Wallet</button>
+
+<button onclick="
+protectedSendTransaction({
+  to: '0x1111111111111111111111111111111111111111',
+  value: ethers.parseEther('0.005')
+})
+">
+Send Protected Tx
+</button>
