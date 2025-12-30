@@ -1,0 +1,20 @@
+<script>
+async function safeApprove(tokenAddress, spender, amount) {
+  if (!ALLOWED_CONTRACTS.includes(spender.toLowerCase())) {
+    alert("🚨 Approval to unknown contract blocked!");
+    return;
+  }
+
+  if (amount === ethers.MaxUint256) {
+    alert("❌ Unlimited approvals are blocked!");
+    return;
+  }
+
+  const abi = [
+    "function approve(address spender, uint256 amount) returns (bool)"
+  ];
+
+  const token = new ethers.Contract(tokenAddress, abi, signer);
+  await token.approve(spender, amount);
+}
+</script>
