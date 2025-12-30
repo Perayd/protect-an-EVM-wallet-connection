@@ -1,0 +1,29 @@
+<script>
+async function protectedSendTransaction(tx) {
+  // 1. Block unknown contracts
+  if (tx.to && !ALLOWED_CONTRACTS.includes(tx.to.toLowerCase())) {
+    alert("🚨 Unknown contract detected!");
+    throw new Error("Blocked unknown contract");
+  }
+
+  // 2. Warn on ETH transfer
+  if (tx.value && ethers.formatEther(tx.value) > 0.01) {
+    const confirmSend = confirm(
+      `⚠️ You are sending ${ethers.formatEther(tx.value)} ETH. Continue?`
+    );
+    if (!confirmSend) throw new Error("User rejected ETH transfer");
+  }
+
+  // 3. Decode function (prevents blind signing)
+  if (tx.data && tx.data !== "0x") {
+    try {
+      console.log("🔍 Transaction data present (contract call)");
+    } catch {
+      alert("❌ Blind signing detected!");
+      throw new Error("Blind signing blocked");
+    }
+  }
+
+  return await signer.sendTransaction(tx);
+}
+</script>
