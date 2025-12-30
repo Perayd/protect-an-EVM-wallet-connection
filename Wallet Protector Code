@@ -1,0 +1,31 @@
+<script>
+const ALLOWED_CHAIN_ID = 1; // Ethereum Mainnet
+const ALLOWED_CONTRACTS = [
+  "0x1111111111111111111111111111111111111111", // Example
+  "0x2222222222222222222222222222222222222222"
+].map(a => a.toLowerCase());
+
+let provider, signer, userAddress;
+
+// Connect Wallet Safely
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert("MetaMask not detected");
+    return;
+  }
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+
+  signer = await provider.getSigner();
+  userAddress = await signer.getAddress();
+
+  const network = await provider.getNetwork();
+  if (Number(network.chainId) !== ALLOWED_CHAIN_ID) {
+    alert("❌ Wrong network! Please switch to Ethereum Mainnet.");
+    throw new Error("Wrong network");
+  }
+
+  console.log("✅ Wallet connected:", userAddress);
+}
+</script>
